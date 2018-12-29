@@ -1,8 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
 namespace Wm3Util
@@ -14,30 +11,11 @@ namespace Wm3Util
         private Quaternion m_rotation;
         private Vector3 m_scale;
         private float m_ambient;
-        private UInt32 m_flags;
+        private Wm3Flags m_flags;
+        private string m_name;
 
         private Wm3Texture m_texture;
-        private bool m_loaded = false;
-
-        private bool m_isSprite = false;
-        private Sprite m_sprite = null;
-        private Material m_material;
-
-        public bool IsSprite
-        {
-            get
-            {
-                return m_isSprite;
-            }
-        }
-
-        public Sprite Sprite
-        {
-            get
-            {
-                return m_sprite;
-            }
-        }
+        private bool m_loaded;
 
         public Vector3 Position
         {
@@ -63,19 +41,11 @@ namespace Wm3Util
             }
         }
 
-        public uint Flags
+        public Wm3Flags Flags
         {
             get
             {
                 return m_flags;
-            }
-        }
-
-        public Material Material
-        {
-            get
-            {
-                return m_material;
             }
         }
 
@@ -85,6 +55,41 @@ namespace Wm3Util
             {
                 return m_ambient;
             }
+        }
+
+        public string Name
+        {
+            get
+            {
+                return m_name;
+            }
+        }
+
+        public Wm3Texture Texture
+        {
+            get
+            {
+                return m_texture;
+            }
+        }
+
+        public bool Loaded
+        {
+            get
+            {
+                return m_loaded;
+            }
+        }
+
+        public Wm3Object()
+        {
+            m_name = "Object";
+            m_loaded = false;
+        }
+
+        public Wm3Object(int index) : this()
+        {
+            m_name += " " + index;
         }
 
         public bool Read(BinaryReader reader)
@@ -103,7 +108,7 @@ namespace Wm3Util
                 m_scale.y = reader.ReadSingle();
                 m_scale.z = reader.ReadSingle();
                 m_ambient = reader.ReadSingle();
-                m_flags = reader.ReadUInt32();
+                m_flags = new Wm3Flags(reader.ReadUInt32());
                 m_loaded = true;
             }
             catch (Exception e)
@@ -127,25 +132,6 @@ namespace Wm3Util
             }
 
             return success;
-        }
-
-        public bool Construct()
-        {
-            if (m_loaded)
-            {
-                m_isSprite = m_texture.IsSprite();
-                if (m_isSprite)
-                {
-                    m_sprite = m_texture.Sprite;
-                    m_material = m_texture.Material;
-                }
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-
         }
     }
 }

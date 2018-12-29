@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
 namespace Wm3Util
@@ -20,14 +18,20 @@ namespace Wm3Util
         private uint[] m_textureRef;
         private byte[] m_textureSub;
         private float m_ambient;
-        private UInt32 m_flags;
+        private Wm3Flags m_flags;
+        private string m_name;
 
         private Wm3Texture[] m_textures;
 
-        private Material[] m_materials;
-        private Mesh m_mesh;
+        private bool m_loaded;
 
-        private bool m_loaded = false;
+        public int NumSubmeshes
+        {
+            get
+            {
+                return m_numSubmeshes;
+            }
+        }
 
         public Vector3 Position
         {
@@ -37,27 +41,35 @@ namespace Wm3Util
             }
         }
 
-        public Material[] Materials
+        public Vector3[] Vertices
         {
             get
             {
-                return m_materials;
+                return m_vertices;
             }
         }
 
-        public Mesh Mesh
+        public Vector2[] Uv
         {
             get
             {
-                return m_mesh;
+                return m_uv;
             }
         }
 
-        public UInt32 Flags
+        public Vector3[] Normals
         {
             get
             {
-                return m_flags;
+                return m_normals;
+            }
+        }
+
+        public List<int>[] Triangles
+        {
+            get
+            {
+                return m_triangles;
             }
         }
 
@@ -67,6 +79,49 @@ namespace Wm3Util
             {
                 return m_ambient;
             }
+        }
+
+        public Wm3Flags Flags
+        {
+            get
+            {
+                return m_flags;
+            }
+        }
+
+        public string Name
+        {
+            get
+            {
+                return m_name;
+            }
+        }
+
+        public Wm3Texture[] Textures
+        {
+            get
+            {
+                return m_textures;
+            }
+        }
+
+        public bool Loaded
+        {
+            get
+            {
+                return m_loaded;
+            }
+        }
+
+        public Wm3Mesh()
+        {
+            m_name = "Mesh";
+            m_loaded = false;
+        }
+
+        public Wm3Mesh(int index) : this()
+        {
+            m_name += " " + index;
         }
 
         public bool Read(BinaryReader reader)
@@ -81,7 +136,7 @@ namespace Wm3Util
 
                 //currently not used
                 m_ambient = reader.ReadSingle();
-                m_flags = reader.ReadUInt32();
+                m_flags = new Wm3Flags(reader.ReadUInt32());
 
                 m_loaded = true;
             }
@@ -114,33 +169,6 @@ namespace Wm3Util
             }
 
             return success;
-        }
-
-        public bool Construct(string name)
-        {
-            if (m_loaded)
-            {
-                m_materials = new Material[m_numSubmeshes];
-                m_mesh = new Mesh();
-                m_mesh.subMeshCount = m_numSubmeshes;
-                m_mesh.vertices = m_vertices;
-                m_mesh.normals = m_normals;
-                m_mesh.uv = m_uv;
-                m_mesh.name = name;
-                for (int j = 0; j < m_numSubmeshes; j++)
-                {
-                    m_mesh.SetTriangles(m_triangles[j], j);
-                    Wm3Texture refTex = m_textures[j];
-                    m_materials[j] = refTex.Material;
-                }
-
-                return true;
-            }
-            else
-            {
-                m_mesh = null;
-                return false;
-            }
         }
 
         private void ReadTriangles(BinaryReader reader)

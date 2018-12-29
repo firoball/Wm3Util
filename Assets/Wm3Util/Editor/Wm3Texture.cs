@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using UnityEditor;
 using UnityEngine;
 
 namespace Wm3Util
@@ -8,59 +7,76 @@ namespace Wm3Util
     public class Wm3Texture
     {
         private byte m_textureType;
-        private UInt32 m_flags;
+        private Wm3Flags m_flags;
         private float m_ambient;
         private float m_albedo;
+        private string m_name;
         private UInt16 m_bitmapCount;
         private UInt32[] m_bitmapRefId;
 
         private Wm3Bitmap[] m_bitmaps;
         private bool m_loaded = false;
 
-
-        private Sprite m_sprite;
-        private Material m_material;
-
-        static private Material[] c_baseMaterials;
-
         private const byte c_sprite = 1;
         private const byte c_model = 2;
 
-        public Texture2D Texture
+        public Wm3Flags Flags
         {
             get
             {
-                return m_sprite.texture;
+                return m_flags;
             }
         }
 
-        public Sprite Sprite
+        public float Ambient
         {
             get
             {
-                return m_sprite;
+                return m_ambient;
             }
         }
 
-        public static Material[] BaseMaterials
+        public float Albedo
         {
             get
             {
-                return c_baseMaterials;
-            }
-
-            set
-            {
-                c_baseMaterials = value;
+                return m_albedo;
             }
         }
 
-        public Material Material
+        public string Name
         {
             get
             {
-                return m_material;
+                return m_name;
             }
+        }
+
+        public Wm3Bitmap[] Bitmaps
+        {
+            get
+            {
+                return m_bitmaps;
+            }
+        }
+
+        public bool Loaded
+        {
+            get
+            {
+                return m_loaded;
+            }
+        }
+
+        public Wm3Texture()
+        {
+            m_name = "Texture";
+            m_loaded = false;
+        }
+
+        public Wm3Texture(int index) : this()
+        {
+            m_name += " " + index;
         }
 
         public bool IsSprite()
@@ -73,7 +89,7 @@ namespace Wm3Util
             try
             {
                 m_textureType = reader.ReadByte();
-                m_flags = reader.ReadUInt32();
+                m_flags = new Wm3Flags(reader.ReadUInt32());
                 m_ambient = reader.ReadSingle();
                 m_albedo = reader.ReadSingle();
                 m_bitmapCount = reader.ReadUInt16();
@@ -114,57 +130,6 @@ namespace Wm3Util
                 success = true;
             }
             return success;
-        }
-
-        public bool SetupTexture()
-        {
-            //A3 models were referenced as texture, but did not have bitmaps assigned. Skip those here
-            if (m_textureType == c_sprite)
-            {
-                //this is a hack. a texture could have multiple bitmaps, so multiple textures should be created not just the first one
-                Wm3Bitmap bitmap = m_bitmaps[0];
-                bool sky = false;
-                if ((m_flags & Wm3Flags.Sky) != 0)
-                    sky = true;
-                bitmap.LocateTexture(sky);
-                m_sprite = bitmap.Sprite;
-            }
-            return true;
-        }
-
-        public bool BuildMaterial (string name)
-        {
-            if (c_baseMaterials != null && c_baseMaterials.Length > 0)
-            {
-                float alpha = 1.0f;
-                if ((m_flags & Wm3Flags.Transparent) != 0)
-                {
-                    m_material = new Material(c_baseMaterials[Wm3Builder.c_overlay]);
-                    alpha = 0.7f;
-                }
-
-                if ((m_flags & Wm3Flags.Sky) != 0)
-                {
-                    m_material = new Material(c_baseMaterials[Wm3Builder.c_sky]);
-                }
-                
-                if (!m_material)
-                {
-                    m_material = new Material(c_baseMaterials[Wm3Builder.c_solid]);
-                }
-                m_material.mainTexture = m_sprite.texture;
-                m_material.name = name;
-                float ambient = (m_ambient * 0.01f) + 0.5f;
-                Color col = new Color(ambient, ambient, ambient, alpha);
-                m_material.color = col;
-                return true;
-            }
-            else
-            {
-                Debug.LogError("WM3Texture.BuildMaterial: BaseMaterial not configured");
-                m_material = null;
-                return false;
-            }
         }
 
     }

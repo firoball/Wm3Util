@@ -85,7 +85,7 @@ public class Wm3Loader
             m_data.InitBitmaps(count);
             for (int i = 0; i < count; i++)
             {
-                Wm3Bitmap bitmap = new Wm3Bitmap();
+                Wm3Bitmap bitmap = new Wm3Bitmap(i);
                 if (bitmap.Read(m_br))
                 {
                     m_data.Bitmaps[i] = bitmap;
@@ -123,7 +123,7 @@ public class Wm3Loader
             m_data.InitTextures(count);
             for (int i = 0; i < count; i++)
             {
-                Wm3Texture texture = new Wm3Texture();
+                Wm3Texture texture = new Wm3Texture(i);
                 if (texture.Read(m_br))
                 {
                     m_data.Textures[i] = texture;
@@ -144,7 +144,7 @@ public class Wm3Loader
             m_data.InitMeshes(count);
             for (int i = 0; i < count; i++)
             {
-                Wm3Mesh mesh = new Wm3Mesh();
+                Wm3Mesh mesh = new Wm3Mesh(i);
                 if (mesh.Read(m_br))
                 {
                     m_data.Meshes[i] = mesh;
@@ -165,7 +165,7 @@ public class Wm3Loader
             m_data.InitObjects(count);
             for (int i = 0; i < count; i++)
             {
-                Wm3Object obj = new Wm3Object();
+                Wm3Object obj = new Wm3Object(i);
                 if (obj.Read(m_br))
                 {
                     m_data.Objects[i] = obj;

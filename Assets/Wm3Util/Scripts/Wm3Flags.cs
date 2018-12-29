@@ -4,6 +4,8 @@ namespace Wm3Util
 {
     public class Wm3Flags
     {
+        private UInt32 m_value;
+
         /* general flags */
         public const UInt32 Flag1 = 0x00000001;
         public const UInt32 Flag2 = 0x00000002;
@@ -17,7 +19,6 @@ namespace Wm3Util
         /* texture flags */
         public const UInt32 Ghost = 0x00000100;
         public const UInt32 Diaphanous = 0x00000200;
-        public const UInt32 Transparent = Ghost | Diaphanous;
         public const UInt32 Sky = 0x00002000;
 
         /* wall (mesh) flags */
@@ -33,9 +34,33 @@ namespace Wm3Util
         /* custom flags */
         public const UInt32 Scripting = 0x80000000;
 
-        public static bool IsSet(UInt32 status, UInt32 flag)
+        public uint Value
         {
-            return ((status & flag) != 0);
+            get
+            {
+                return m_value;
+            }
+
+            set
+            {
+                m_value = value;
+            }
         }
+
+        public Wm3Flags() : this(0)
+        {
+
+        }
+
+        public Wm3Flags(uint value)
+        {
+            m_value = value;
+        }
+
+        public bool IsSet(UInt32 flag)
+        {
+            return ((m_value & flag) != 0);
+        }
+
     }
 }

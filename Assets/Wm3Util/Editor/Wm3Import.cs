@@ -132,7 +132,7 @@ namespace Wm3Util
                 Wm3Loader loader = new Wm3Loader();
                 loader.LoadWM3(s_levelData);
                 Wm3Data data = loader.Data;
-                Wm3Builder builder = new Wm3Builder(s_defaultMaterials);
+                LevelBuilder builder = new LevelBuilder(s_defaultMaterials);
                 builder.Construct(data);
             }
         }

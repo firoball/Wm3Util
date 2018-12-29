@@ -384,12 +384,14 @@
   <ItemGroup>
     <Compile Include="Assets\Wm3Util\Editor\BinaryReaderExtension.cs" />
     <Compile Include="Assets\Wm3Util\Editor\EditorObjExporter.cs" />
+    <Compile Include="Assets\Wm3Util\Editor\LevelMaterial.cs" />
+    <Compile Include="Assets\Wm3Util\Editor\ObjectBuilder.cs" />
     <Compile Include="Assets\Wm3Util\Editor\MeshBuilder.cs" />
-    <Compile Include="Assets\Wm3Util\Editor\MeshExtension.cs" />
     <Compile Include="Assets\Wm3Util\Editor\ObjExporter.cs" />
     <Compile Include="Assets\Wm3Util\Editor\ObjExporter2.cs" />
+    <Compile Include="Assets\Wm3Util\Editor\SpriteLocator.cs" />
     <Compile Include="Assets\Wm3Util\Editor\Wm3Bitmap.cs" />
-    <Compile Include="Assets\Wm3Util\Editor\Wm3Builder.cs" />
+    <Compile Include="Assets\Wm3Util\Editor\LevelBuilder.cs" />
     <Compile Include="Assets\Wm3Util\Editor\Wm3Data.cs" />
     <Compile Include="Assets\Wm3Util\Editor\Wm3Import.cs" />
     <Compile Include="Assets\Wm3Util\Editor\Wm3Loader.cs" />
