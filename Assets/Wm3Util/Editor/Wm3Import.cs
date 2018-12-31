@@ -9,6 +9,22 @@ namespace Wm3Util
         private static Material[] s_defaultMaterials = new Material[4];
         private static string[] s_materialLabels = {"Solid", "Overlay", "Sky", "Sprite" };
 
+        public static Material[] DefaultMaterials
+        {
+            get
+            {
+                return s_defaultMaterials;
+            }
+        }
+
+        public static string[] MaterialLabels
+        {
+            get
+            {
+                return s_materialLabels;
+            }
+        }
+
         [MenuItem("Window/WM3 Importer")]
         private static void OpenWindow()
         {
@@ -129,10 +145,12 @@ namespace Wm3Util
 
             if (proceed)
             {
+                Debug.ClearDeveloperConsole();
+                TemplateMaterials.Reset();
                 Wm3Loader loader = new Wm3Loader();
                 loader.LoadWM3(s_levelData);
                 Wm3Data data = loader.Data;
-                LevelBuilder builder = new LevelBuilder(s_defaultMaterials);
+                LevelBuilder builder = new LevelBuilder();
                 builder.Construct(data);
             }
         }

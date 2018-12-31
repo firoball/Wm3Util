@@ -384,7 +384,10 @@
   <ItemGroup>
     <Compile Include="Assets\Wm3Util\Editor\BinaryReaderExtension.cs" />
     <Compile Include="Assets\Wm3Util\Editor\EditorObjExporter.cs" />
-    <Compile Include="Assets\Wm3Util\Editor\LevelMaterial.cs" />
+    <Compile Include="Assets\Wm3Util\Editor\LevelTexture.cs" />
+    <Compile Include="Assets\Wm3Util\Editor\LevelTextureType.cs" />
+    <Compile Include="Assets\Wm3Util\Editor\TemplateMaterials.cs" />
+    <Compile Include="Assets\Wm3Util\Editor\TextureManager.cs" />
     <Compile Include="Assets\Wm3Util\Editor\ObjectBuilder.cs" />
     <Compile Include="Assets\Wm3Util\Editor\MeshBuilder.cs" />
     <Compile Include="Assets\Wm3Util\Editor\ObjExporter.cs" />

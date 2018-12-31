@@ -7,18 +7,48 @@ namespace Wm3Util
     public static class ObjectBuilder
     {
 
-        public static GameObject SpawnSpriteObject(Vector3 position, Quaternion rotation, Vector3 scale, Sprite sprite)
+        public static bool Build(Wm3Object obj, TextureManager textureManager, out GameObject gameObj)
         {
-            GameObject obj = new GameObject()
+            bool success = false;
+            gameObj = null;
+            Material material;
+            Sprite sprite;
+            if (textureManager.BuildObjectMaterial(obj.Texture, obj.Ambient, out material, out sprite))
             {
-                name = sprite.name
-            };
-            obj.transform.position = position;
-            obj.transform.rotation = rotation;
-            scale.z = 0;
-            obj.transform.localScale = scale;
+                gameObj = SpawnSpriteObject(sprite, material);
+                gameObj.name = sprite.name;
+                gameObj.transform.position = obj.Position;
+                gameObj.transform.rotation = obj.Rotation;
+                Vector3 scale = obj.Scale;
+                scale.z = 0; //fix Wm3 random object z-scale
+                gameObj.transform.localScale = scale;
+                gameObj.isStatic = true;
+                success = true;
+
+                //TODO: move to static helper class
+                Renderer renderer = gameObj.GetComponent<Renderer>();
+                Collider collider = gameObj.GetComponent<Collider>();
+
+                if (obj.Flags.IsSet(Wm3Flags.Invisible))
+                {
+                    renderer.enabled = false;
+                }
+
+                if (obj.Flags.IsSet(Wm3Flags.Passable))
+                {
+                    collider.enabled = false;
+                }
+            }
+            return success;
+        }
+
+        private static GameObject SpawnSpriteObject(Sprite sprite, Material material)
+        {
+            GameObject obj = new GameObject();
+
             SpriteRenderer renderer = obj.AddComponent<SpriteRenderer>();
             renderer.sprite = sprite;
+            renderer.sharedMaterial = material;
 
             CapsuleCollider collider = obj.AddComponent<CapsuleCollider>();
             Vector2 size = new Vector2(sprite.bounds.extents.x, collider.height = sprite.bounds.extents.y);
@@ -34,7 +64,6 @@ namespace Wm3Util
                 collider.radius = size.y;
                 collider.height = size.x * 2;
             }
-            //        Debug.Log(obj.name + " " + sprite.bounds + " " + sprite.bounds.size+" "+collider.bounds);
 
             return obj;
         }

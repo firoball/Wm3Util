@@ -6,7 +6,43 @@ namespace Wm3Util
 {
     public static class MeshBuilder
     {
-        public static bool Construct(Mesh mesh, Wm3Mesh wm3Mesh)
+        public static bool Build(Wm3Mesh mesh, TextureManager textureManager, out GameObject gameObj)
+        {
+            bool success = false;
+            Mesh unityMesh = new Mesh();
+            gameObj = null;
+            if (Construct(unityMesh, mesh))
+            {
+
+                Material[] materials;
+                bool isOverlay = mesh.Flags.IsSet(Wm3Flags.Overlay);
+                if (textureManager.BuildMeshMaterials(mesh.Textures, mesh.Ambient, isOverlay, out materials))
+                {
+                    gameObj = SpawnMeshObject(unityMesh, materials);
+                    gameObj.name = unityMesh.name;
+                    gameObj.transform.position = mesh.Position;
+                    gameObj.isStatic = true;
+                    success = true;
+
+                    //TODO: move to static helper class
+                    Renderer renderer = gameObj.GetComponent<Renderer>();
+                    Collider collider = gameObj.GetComponent<Collider>();
+
+                    if (mesh.Flags.IsSet(Wm3Flags.Invisible))
+                    {
+                        renderer.enabled = false;
+                    }
+
+                    if (mesh.Flags.IsSet(Wm3Flags.Passable))
+                    {
+                        collider.enabled = false;
+                    }
+                }
+            }
+            return success;
+        }
+
+        private static bool Construct(Mesh mesh, Wm3Mesh wm3Mesh)
         {
             if (wm3Mesh.Loaded)
             {
@@ -28,16 +64,15 @@ namespace Wm3Util
             }
         }
 
-
-        public static GameObject SpawnMeshObject(Vector3 position, Mesh mesh)
+        private static GameObject SpawnMeshObject(Mesh mesh, Material[] materials)
         {
             GameObject obj = new GameObject();
-            obj.transform.position = position;
 
             MeshFilter filter = obj.AddComponent<MeshFilter>();
             filter.sharedMesh = mesh;
 
             MeshRenderer renderer = obj.AddComponent<MeshRenderer>();
+            renderer.sharedMaterials = materials;
             renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             renderer.receiveShadows = false;
 
