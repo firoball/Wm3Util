@@ -106,12 +106,7 @@ namespace Wm3Util
                 }
                 else
                 {
-                    if (m_textureType == LevelTextureType.OVERLAY)
-                    {
-                        m_material = new Material(TemplateMaterials.GetOverlay());
-                    }
-
-                    else if (texture.Flags.IsSet(Wm3Flags.Ghost) || texture.Flags.IsSet(Wm3Flags.Diaphanous))
+                    if (texture.Flags.IsSet(Wm3Flags.Ghost) || texture.Flags.IsSet(Wm3Flags.Diaphanous))
                     {
                         m_material = new Material(TemplateMaterials.GetOverlay());
                         alpha = 0.7f;
@@ -122,12 +117,18 @@ namespace Wm3Util
                         m_material = new Material(TemplateMaterials.GetSky());
                     }
 
+                    else if (m_textureType == LevelTextureType.OVERLAY)
+                    {
+                        m_material = new Material(TemplateMaterials.GetOverlay());
+                    }
+
                     else
                     {
                         m_material = new Material(TemplateMaterials.GetSolid());
                     }
                 }
 
+                m_material.renderQueue = -1; //force shader render queue in case template material was setup the wrong way
                 m_material.mainTexture = m_sprite.texture;
                 m_material.name = texture.Name + " A" + m_ambient.ToString("0.00");
                 if (m_textureType == LevelTextureType.SPRITE)
