@@ -7,7 +7,7 @@
 	}
 
 		SubShader{
-		Tags{ "Queue" = "AlphaTest" "RenderType" = "TransparentCutout" "IgnoreProjector" = "True"}
+		Tags{ "Queue" = "Transparent" "RenderType" = "TransparentCutout" "IgnoreProjector" = "True"}
 		Fog { Mode off }
 		Blend SrcAlpha OneMinusSrcAlpha
 		ZWrite on
