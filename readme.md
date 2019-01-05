@@ -44,12 +44,13 @@ Use this utility to pretty much whatever you want:
 
 The Wm3 Importer panel will show up. Configuration must be done for template materials and level.
 ![Wm3 Importer Panel](wm3panel.jpg)
+
 Drag any .wm3.bytes file of choice to the Wm3 Importer dialog.
 The template materials can be found in *Assets/Wm3Util/Materials*. Drag them to the dialog as shown.
 They are built in a way to imitate the Acknex3 look as close as possible. Customization is possible, though.
 
 
-##Give me Samples!
+## Give me Samples!
 
 A sample project will be forked soon.
 
