@@ -54,7 +54,7 @@
 			float4 frag(vs_out IN) : COLOR
 			{
 				float4 colortex = tex2D(_MainTex, IN.tex);
-				float trans = all(all(colortex.rgb == _TransColor.rgb)) & (_Overlay > 0);
+				float trans = all(colortex.rgb == _TransColor.rgb) & (_Overlay > 0);
 				clip(-trans);
 				float4 color = Wm3Lighting(colortex, IN.normal, IN.worldPos, _Diffuse, _Color);
 				return color;
