@@ -74,17 +74,8 @@
 			float4 frag(vs_out IN) : COLOR
 			{
 				float4 colortex = tex2D(_MainTex, IN.tex);
-				float trans = (colortex == _TransColor);
+				float trans = all(colortex.rgb == _TransColor.rgb);
 				clip(-trans);
-				/*float4 diffuse = 0.9 + 0.1 *_Albedo * saturate(dot(_WorldSpaceLightPos0, IN.normal));
-				diffuse.a = 1;
-
-				float viewDistance = distance( _WorldSpaceCameraPos, IN.worldPos);
-				float fogFactor =  saturate((viewDistance - 50) / (100 - 50));
-
-				float4 color;
-				color = saturate(colortex * diffuse * _Color);// *unity_AmbientSky);
-				color = lerp(color, unity_FogColor, fogFactor);*/
 				float4 color = Wm3Lighting(colortex, IN.normal, IN.worldPos, _Diffuse, _Color);
 				return color;
 			}

@@ -45,7 +45,7 @@
 				vs_out OUT;
 				OUT.pos = UnityObjectToClipPos(IN.pos);
 				OUT.normal = normalize(mul(UNITY_MATRIX_M, IN.normal));
-				OUT.tex = OUT.pos;// mul(UNITY_MATRIX_M, IN.pos);
+				OUT.tex = OUT.pos;
 				OUT.dir = mul(unity_CameraToWorld, float3(0, 0, 1));
 				return OUT;
 			}
@@ -74,7 +74,7 @@
 				float4 colortex = tex2D(_MainTex, screenUV);
 				float4 light = _Color + unity_AmbientSky;
 				float4 color = saturate(colortex * light);
-				color.a = 0; //sky is always opaque
+				color.a = 1; //sky is always opaque
 				return color;
 			}
 			ENDCG

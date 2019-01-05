@@ -58,7 +58,17 @@ They are built in a way to imitate the Acknex3 look as close as possible. Custom
 
 ## Give me Samples!
 
-A sample project will be forked soon.
+Kandoria is a sample project with several .wm3 files imported into several scenes.
+
+Some manual changes were done:
+* Doors and enemies were made passable
+* Pitfalls were covered with invisible planes
+* Levels spread over several .wm3 files were merged
+* Simple level hub system was added
+* Fog and sky shader setup
+* FPSController for easy navigation added
+
+Github: [https://github.com/firoball/Wm3Util_sample](https://github.com/firoball/Wm3Util_sample)
 
 
 ## Future Development

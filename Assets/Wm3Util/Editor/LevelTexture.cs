@@ -55,7 +55,16 @@ namespace Wm3Util
         public bool Has(Wm3Texture texture, float ambient, LevelTextureType textureType)
         {
             bool ret = false;
-            ambient = CalculateAmbient(texture, ambient, textureType);
+            //sky requires special ambient treatment
+            if (texture.Flags.IsSet(Wm3Flags.Sky))
+            {
+                ambient = CalculateAmbient(texture, ambient, LevelTextureType.SKY);
+            }
+            else
+            {
+                ambient = CalculateAmbient(texture, ambient, textureType);
+            }
+
             if (
                 (m_textureReference != null) && (m_textureReference == texture)
                 && (Convert.ToInt32((ambient * 100) - (m_ambient * 100)) == 0)
@@ -115,6 +124,8 @@ namespace Wm3Util
 
                     else if (texture.Flags.IsSet(Wm3Flags.Sky))
                     {
+                        //recalculate ambient for sky (special treatment necessary)
+                        m_ambient = CalculateAmbient(texture, ambient, LevelTextureType.SKY);
                         m_material = new Material(TemplateMaterials.GetSky());
                         albedo = 0;
                     }
@@ -151,16 +162,29 @@ namespace Wm3Util
         private float CalculateAmbient(Wm3Texture texture, float ambient, LevelTextureType textureType)
         {
             float ambient_sum;
-            if (textureType == LevelTextureType.SPRITE)
+            switch (textureType)
             {
-                //WM3 format already merges texture and object ambient (special treatment for A8 engine)
-                //--> only use object ambient and drop any texture ambient
-                ambient_sum = (ambient * 0.01f) + 0.5f;
-            }
-            else
-            {
-                //add mesh specific ambient to texture ambient
-                ambient_sum = ((texture.Ambient + ambient) * 0.01f) + 0.5f;
+                case LevelTextureType.SPRITE:
+                    {
+                        //WM3 format already merges texture and object ambient (special treatment for A8 engine)
+                        //--> only use object ambient and drop any texture ambient
+                        ambient_sum = (ambient * 0.01f) + 0.5f;
+                        break;
+                    }
+
+                case LevelTextureType.SKY:
+                    {
+                        //sky does not receive mesh specific ambient
+                        ambient_sum = (texture.Ambient * 0.01f) + 0.5f;
+                        break;
+                    }
+
+                default:
+                    {
+                        //add mesh specific ambient to texture ambient
+                        ambient_sum = ((texture.Ambient + ambient) * 0.01f) + 0.5f;
+                        break;
+                    }
             }
 
             return ambient_sum;

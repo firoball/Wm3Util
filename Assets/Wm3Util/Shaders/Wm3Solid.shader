@@ -8,7 +8,6 @@
 		SubShader{
 		Tags{ "Queue" = "Geometry" "RenderType" = "Opaque" "IgnoreProjector" = "True"}
 		Fog { Mode off }
-		Blend SrcAlpha OneMinusSrcAlpha
 		ZWrite on
 
 		Pass{
@@ -35,7 +34,6 @@
 				float2 tex : TEXCOORD0;
 				float3 worldPos : TEXCOORD1;
 				float3 normal : NORMAL;
-				//float fog : TEXCOORD2;
 			};
 
 			vs_out vert(vs_in IN)
@@ -45,7 +43,6 @@
 				OUT.worldPos = mul(unity_ObjectToWorld, IN.pos);
 				OUT.normal = normalize(mul(unity_ObjectToWorld, IN.normal));
 				OUT.tex = IN.tex;
-				//OUT.fog = OUT.pos.z;
 				return OUT;
 			}
 
@@ -53,14 +50,7 @@
 			{
 				float4 colortex = tex2D(_MainTex, IN.tex);
 				float4 color = Wm3Lighting(colortex, IN.normal, IN.worldPos, _Diffuse, _Color);
-				/*float4 diffuse = _Diffuse * saturate(dot(_WorldSpaceLightPos0, IN.normal));
-				diffuse.a = 0;
-
-				float viewDistance = distance( _WorldSpaceCameraPos, IN.worldPos);
-				float fogFactor = saturate(viewDistance * unity_FogParams.z + unity_FogParams.w);
-				float4 light = _Color + diffuse + unity_AmbientSky;
-				float4 color = saturate(colortex * light);
-				color = lerp(unity_FogColor, color, fogFactor);*/
+				color.a = 1;
 				return color;
 			}
 			ENDCG

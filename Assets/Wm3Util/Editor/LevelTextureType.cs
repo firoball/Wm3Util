@@ -5,6 +5,7 @@ namespace Wm3Util
     {
         STANDARD = 0,
         SPRITE = 1,
-        OVERLAY = 2
+        OVERLAY = 2,
+        SKY = 3
     }
 }
