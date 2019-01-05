@@ -94,6 +94,7 @@ namespace Wm3Util
             if (TemplateMaterials.IsInitialized)
             {
                 float alpha = 1.0f;
+                float albedo = texture.Albedo;
 
                 m_ambient = CalculateAmbient(texture, ambient, m_textureType);
                 if (m_textureType == LevelTextureType.SPRITE)
@@ -115,6 +116,7 @@ namespace Wm3Util
                     else if (texture.Flags.IsSet(Wm3Flags.Sky))
                     {
                         m_material = new Material(TemplateMaterials.GetSky());
+                        albedo = 0;
                     }
 
                     else if (m_textureType == LevelTextureType.OVERLAY)
@@ -135,6 +137,7 @@ namespace Wm3Util
                     m_material.name += "S";
                 Color col = new Color(m_ambient, m_ambient, m_ambient, alpha);
                 m_material.color = col;
+                m_material.SetFloat("_Diffuse", albedo * 0.01f);
                 return true;
             }
             else
