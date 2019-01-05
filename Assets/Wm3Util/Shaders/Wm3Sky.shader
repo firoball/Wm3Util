@@ -56,24 +56,25 @@
 				//calculate screen UVs
 				float2 screenUV = IN.tex.xy / IN.tex.w; // -1..1
 
-				//calcualte screen size and aspect correction
+				//calculate screen size and aspect correction
 				float2 corr = float2(_ScaleX * _ScreenParams.x / _ScreenParams.y, _ScaleY);
 
-				//horizontal shifting
-				float angle = atan2(IN.dir.z, IN.dir.x) / PI; /* -1..1*/
-//				screenUV.x -= 2*angle;
-
 				//vertical shifting
-				screenUV.y *= -1;
+				screenUV.y *= -1; //remove for WebGL build
 				screenUV.y += _OffsetY + IN.dir.y * 2;
 
 				//apply screen size and aspect correction
 				screenUV *= corr;
+
+				//horizontal shifting
+				float angle = atan2(IN.dir.z, IN.dir.x) / PI; /* -1..1*/
 				screenUV.x -= _ScrollSpeed * angle;
 
+
 				float4 colortex = tex2D(_MainTex, screenUV);
-				float4 color;
-				color = saturate((colortex) * _Color);
+				float4 light = _Color + unity_AmbientSky;
+				float4 color = saturate(colortex * light);
+				color.a = 0; //sky is always opaque
 				return color;
 			}
 			ENDCG
